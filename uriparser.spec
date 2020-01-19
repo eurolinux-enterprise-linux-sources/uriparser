@@ -1,6 +1,6 @@
 Name:           uriparser
 Version:        0.7.5
-Release:        10%{?dist}
+Release:        7%{?dist}
 Summary:        URI parsing library - RFC 3986
 
 Group:          System Environment/Libraries
@@ -8,12 +8,6 @@ License:        BSD
 URL:            http://%{name}.sourceforge.net/
 Source0:        http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 Patch0:         uriparser-0.7.5-doc_Makefile_in.patch
-# Backport of https://github.com/uriparser/uriparser/commit/864f5d4c127def386dd5cc926ad96934b297f04e
-# Fixes CVE-2018-19198 (rhbz#1652002)
-Patch1:         uriparser-0.7.5-CVE-2018-19198-fix.patch
-# Backport of https://github.com/uriparser/uriparser/commit/f76275d4a91b28d687250525d3a0c5509bbd666f
-# Fixes CVE-2018-19199 (rhbz#1652001)
-Patch2:         uriparser-0.7.5-CVE-2018-19199-fix.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  doxygen, graphviz, cpptest-devel
 Requires:       cpptest
@@ -35,8 +29,6 @@ developing applications that use %{name}.
 %prep
 %setup -q
 %patch0 -p1 -b .doc_Makefile_in
-%patch1 -p1
-%patch2 -p1
 sed -i 's/\r//' THANKS
 sed -i 's/\r//' COPYING
 iconv -f iso-8859-1 -t utf-8 -o THANKS{.utf8,}
@@ -62,16 +54,7 @@ make %{?_smp_mflags}
 #cd doc;
 # fix for automated autotool calls
 #touch aclocal.m4 configure Makefile.in
-# jkucera: escape %%; this line was commented out, but with no effect as
-#          %%configure is a multiline macro and macros are expanded first by
-#          rpm; thus, configure and make were still invoked; escaping %% has a
-#          side effect that docdir became %%{_datadir}/doc/uriparser-doc
-#          (./doc/configure sets PACKAGE=uriparser-doc); invoking ./configure
-#          on the commented line below triggers regenerating Makefiles from
-#          their Makefile.in templates and hence all @docdir@ occurences are
-#          substituted by %%{_datadir}/doc/uriparser (./configure sets
-#          PACKAGE_TARNAME=uriparser)
-#%%configure; make %%{?_smp_mflags}
+#%configure; make %{?_smp_mflags}
 
 %check
 make check
@@ -81,9 +64,8 @@ rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
-# jkucera: s/uriparser/uriparser-doc/g (see my note few lines above)
-mv ${RPM_BUILD_ROOT}%{_datadir}/doc/uriparser-doc/html \
- ${RPM_BUILD_ROOT}%{_datadir}/doc/%{name}-%{version}
+mv $RPM_BUILD_ROOT/%{_datadir}/doc/uriparser/html \
+ $RPM_BUILD_ROOT/%{_datadir}/doc/%{name}-%{version}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -105,17 +87,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
-* Tue Nov 27 2018 Jiri Kucera <jkucera@redhat.com> - 0.7.5-10
-- Fix CVE-2018-19198, CVE-2018-19199
-  Fix unescaped %% in a comment
-  Resolves: #1652002, #1652001
-
-* Fri Jan 24 2014 Daniel Mach <dmach@redhat.com> - 0.7.5-9
-- Mass rebuild 2014-01-24
-
-* Fri Dec 27 2013 Daniel Mach <dmach@redhat.com> - 0.7.5-8
-- Mass rebuild 2013-12-27
-
 * Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.7.5-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
