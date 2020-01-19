@@ -1,0 +1,11 @@
+--- uriparser-0.7.5.org/doc/Makefile.in	2010-09-07 17:02:01.000000000 +0530
++++ uriparser-0.7.5/doc/Makefile.in	2010-09-07 17:02:11.000000000 +0530
+@@ -344,7 +344,7 @@
+ 
+ install-data-local:
+ 	$(MKDIR_P) "$(DESTDIR)$(docdir)/html"  ## Didn't work with installdirs-local
+-	$(INSTALL_DATA) html/*.{css,gif,html,png} "$(DESTDIR)$(docdir)/html/"
++	$(INSTALL_DATA) html/*.{css,html,png} "$(DESTDIR)$(docdir)/html/"
+ 
+ uninstall-local:
+ 	-rm -Rf "$(DESTDIR)$(docdir)/html"
