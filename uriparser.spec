@@ -1,6 +1,6 @@
 Name:           uriparser
 Version:        0.7.5
-Release:        7%{?dist}
+Release:        9%{?dist}
 Summary:        URI parsing library - RFC 3986
 
 Group:          System Environment/Libraries
@@ -87,6 +87,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Fri Jan 24 2014 Daniel Mach <dmach@redhat.com> - 0.7.5-9
+- Mass rebuild 2014-01-24
+
+* Fri Dec 27 2013 Daniel Mach <dmach@redhat.com> - 0.7.5-8
+- Mass rebuild 2013-12-27
+
 * Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.7.5-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
